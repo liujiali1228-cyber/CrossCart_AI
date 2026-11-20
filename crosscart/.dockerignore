@@ -1,0 +1,36 @@
+# 镜像里只放「代码 + 种子素材 + 前端」，不放运行状态与本机密钥。
+#
+# 为什么必须有这个文件：Dockerfile 最后一步是 `COPY . .`，
+# 而仓库根下的 data/scenegen.config.json 里存着真实的图像 API key
+# （开发机用，指向本机代理 127.0.0.1:7897）。没有 .dockerignore 就会把它一起打进镜像层，
+# 之后无论怎么删文件都还能从历史层里翻出来。
+#
+# 注意 data/seed 必须留在镜像里：种子目录 + 商品图是离线可跑与占位图的基础。
+
+data/**
+!data/seed/**
+data-demo/
+data-public/
+.tmp/
+*.log
+
+# 验收产物与截图
+shots/
+
+# 依赖与构建产物（镜像内自己装、自己编）
+node_modules/
+packages/*/dist/
+packages/*/node_modules/
+
+# 本机与编辑器
+.git/
+.gitignore
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 文档与设计稿不必进运行镜像（仓库里照样能看）
+docs/
+demo/
+*.md

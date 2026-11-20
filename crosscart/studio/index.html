@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CrossCart · 场景购物</title>
+<link rel="stylesheet" href="/design.css" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <a class="wordmark" href="/">CrossCart<span class="ai">AI</span></a>
+  <nav class="topnav" aria-label="主导航">
+    <a href="/">探索灵感</a>
+    <a href="/#plans" class="active">我的方案</a>
+    <a href="/#prefs">个人偏好</a>
+  </nav>
+  <div class="topbar-right">
+    <label class="plan-picker">
+      <select id="plan-select" aria-label="切换方案"></select>
+    </label>
+    <button class="btn ghost small" id="btn-duplicate" title="另存为新方案">另存为</button>
+    <button class="btn ghost small" id="btn-share" title="复制这个方案的链接，发给别人">分享</button>
+    <span class="sync" id="sync"><i class="dot"></i><span id="sync-text">连接中…</span></span>
+  </div>
+</header>
+
+<main class="workbench">
+
+  <!-- ======================= 左：AI 购物顾问 ======================= -->
+  <section class="pane chat-pane" id="pane-chat" aria-label="AI 购物顾问">
+    <div class="advisor-head">
+      <div class="advisor-title">
+        <span class="ai-mark">✦</span>
+        <span class="advisor-name">AI 购物顾问</span>
+        <span class="chat-state" id="chat-state">就绪</span>
+      </div>
+      <button class="btn ghost small" id="btn-chat-reset" title="清空对话，开一段新的">新对话</button>
+    </div>
+
+    <div class="messages" id="messages" aria-live="polite"></div>
+
+    <!-- 快捷建议：一行放完，可逐条关闭；聊天开始后自动收起，只在底部留一个「建议」入口 -->
+    <div class="suggest" id="suggest">
+      <div class="quick-actions" id="quick-actions"></div>
+      <div class="advisor-actions" id="advisor-actions"></div>
+    </div>
+
+    <div class="chat-error" id="chat-error" hidden></div>
+
+    <form class="composer" id="composer" autocomplete="off">
+      <textarea id="chat-input" rows="2" placeholder="说说你想买什么、去哪儿、预算多少…"></textarea>
+      <div class="composer-row">
+        <span class="composer-hint" id="composer-hint">Enter 发送</span>
+        <button type="button" class="btn link" id="btn-stop" hidden>停止</button>
+        <button type="submit" class="composer-send" id="btn-send" aria-label="发送">→</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ======================= 中：当前穿搭 ======================= -->
+  <section class="pane plan-pane" id="pane-plan" aria-label="当前穿搭与方案">
+    <div class="plan-head">
+      <div class="plan-head-main">
+        <h1 id="plan-title">加载中…</h1>
+        <p id="plan-sub" class="plan-sub"></p>
+      </div>
+      <div class="plan-head-actions">
+        <button class="btn ghost small" id="btn-scene-switch">切换场景</button>
+        <button class="btn ghost small" id="btn-edit-plan" aria-expanded="false" title="修改预算 / 收货日期 / 收货地">调整约束 <span class="caret" aria-hidden="true">⌄</span></button>
+        <button class="btn ghost small" id="btn-create-demo" hidden>建示例方案</button>
+      </div>
+    </div>
+
+    <!-- 约束：默认收起，只在方案信息下方展开一行，不遮挡人物图 -->
+    <div class="constraint-bar" id="constraint-bar" hidden>
+      <label class="chip-ctl">
+        <span>预算</span>
+        <span class="chip-input">$<input id="budget-input" type="number" min="0" step="10" inputmode="numeric" /></span>
+      </label>
+      <label class="chip-ctl">
+        <span>最晚到货</span>
+        <input id="arrival-input" type="date" />
+      </label>
+      <label class="chip-ctl">
+        <span>收货地</span>
+        <select id="ship-input">
+          <option value="CN">中国大陆</option>
+          <option value="US">美国</option>
+          <option value="JP">日本</option>
+          <option value="GB">英国</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage-head">
+        <div class="stage-title">
+          <span class="scene-name" id="scene-name">—</span>
+          <span class="muted" id="scene-hint"></span>
+        </div>
+        <div class="stage-actions">
+          <div class="seg" id="view-seg">
+            <button data-v="scene" class="active">场景图</button>
+            <button data-v="board">商品图</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="stage-frame" id="stage-frame">
+          <img id="stage-img" alt="AI 场景穿搭" hidden />
+          <div class="hotspots" id="hotspots"></div>
+          <div class="stage-badges" id="stage-badges"></div>
+          <div class="region-editor" id="region-editor" hidden></div>
+        </div>
+        <div class="stage-board" id="stage-board" hidden></div>
+        <div class="stage-overlay" id="stage-overlay" hidden></div>
+      </div>
+
+      <!-- 诚信标识：图片下方一行，绝不覆盖人物 -->
+      <div class="stage-caption" id="stage-caption" hidden></div>
+
+      <div class="stage-foot">
+        <label class="auto-flag" id="auto-flag" title="换件后自动更新穿搭图">
+          <input type="checkbox" id="auto-toggle" />
+          <span>自动更新穿搭图</span>
+        </label>
+        <!-- 额度只在用完时以一句话提示；内部费用数字不上消费者界面 -->
+        <span class="budget-chip" id="budget-chip" hidden></span>
+        <button class="btn ghost small mobile-only" id="btn-open-swap" type="button">更换单品</button>
+      </div>
+
+      <!-- 识别调试信息一律不展示；元素保留仅为兼容旧契约 -->
+      <div class="hotspot-note" id="hotspot-note" hidden></div>
+      <div class="adaptation" id="adaptation" hidden></div>
+      <div class="risk-banner" id="risk-banner" hidden></div>
+    </div>
+  </section>
+
+  <!-- ======================= 右：换装 + 购物清单 + 预算 ======================= -->
+  <aside class="pane shop-pane" id="pane-shop" aria-label="换装与购物清单">
+
+    <div class="shop-swap">
+      <div class="shop-swap-head">
+        <h2>更换单品</h2>
+        <span class="label-xs">点一下看候选</span>
+      </div>
+      <div class="slot-chips" id="slot-chips"></div>
+    </div>
+
+    <div class="shop-scroll" id="shop-scroll">
+      <div class="selection" id="selection" hidden></div>
+
+      <section class="shop-card">
+        <div class="shop-head">
+          <h2>购物清单</h2>
+          <div class="seg" id="shop-view">
+            <button data-view="list" class="active">逐件</button>
+            <button data-view="store">按店铺</button>
+          </div>
+        </div>
+        <div class="shop-list" id="shop-list"></div>
+        <p class="footnote" id="shop-note"></p>
+      </section>
+
+      <details class="mini" id="cost-detail">
+        <summary>费用明细</summary>
+        <ul class="cost-lines" id="cost-lines"></ul>
+        <p class="footnote" id="cost-note"></p>
+      </details>
+
+      <details class="mini" id="risk-detail">
+        <summary>到货与风险 <span class="pill" id="arrival-pill">—</span></summary>
+        <div class="arrival-main" id="arrival-main">—</div>
+        <div class="arrival-sub" id="arrival-sub"></div>
+        <ul class="risks" id="risks"></ul>
+      </details>
+    </div>
+
+    <div class="shop-money">
+      <div class="money-head">
+        <span class="label-xs">合计</span>
+        <span class="pill" id="budget-pill">—</span>
+      </div>
+      <div class="money-big" id="money-total">—</div>
+      <div class="bar"><div class="bar-fill" id="budget-fill"></div></div>
+      <div class="budget-line" id="budget-line"></div>
+      <div class="fit-cta" id="fit-cta" hidden>
+        <button class="btn small" id="btn-fit">调整至预算内</button>
+      </div>
+      <button class="btn primary block" id="btn-channels">查看购买渠道 <span>→</span></button>
+      <div class="save-line">
+        <span class="muted" id="save-state">—</span>
+        <button class="btn link" id="btn-duplicate-2">另存为新方案</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- 移动端视图切换 -->
+<nav class="tabbar" id="tabbar" aria-label="视图切换">
+  <button data-tab="chat" class="active"><span>对话</span></button>
+  <button data-tab="plan"><span>搭配</span></button>
+  <button data-tab="shop"><span>清单</span></button>
+</nav>
+
+<!-- 换件抽屉：临时面板，不占主图空间 -->
+<aside class="swap-drawer" id="swap" hidden aria-label="换一件">
+  <div class="swap-head">
+    <div>
+      <h2 id="swap-title">换一件</h2>
+      <p id="swap-sub" class="muted"></p>
+    </div>
+    <button class="btn ghost small" id="btn-swap-close">关闭</button>
+  </div>
+  <div class="swap-controls">
+    <div class="strategies" id="strategies"></div>
+    <label class="sort-ctl">
+      <span>排序</span>
+      <select id="sort-select">
+        <option value="recommended">推荐</option>
+        <option value="price">到手价从低到高</option>
+        <option value="delta">省得最多</option>
+        <option value="eta">最快到货</option>
+      </select>
+    </label>
+  </div>
+  <div class="candidates" id="candidates"></div>
+  <div class="swap-foot" id="swap-foot"></div>
+</aside>
+
+<!-- 场景选择面板 -->
+<aside class="scene-picker" id="scene-picker" hidden aria-label="切换场景">
+  <div class="picker-head">
+    <div>
+      <h2>切换场景</h2>
+      <p class="muted">只换背景与氛围 —— 商品、价格、购买链接都不变</p>
+    </div>
+    <button class="btn ghost small" id="btn-picker-close">关闭</button>
+  </div>
+  <div class="picker-tabs" id="picker-tabs">
+    <button data-ptab="suggested" class="active">推荐</button>
+    <button data-ptab="city">城市生活</button>
+    <button data-ptab="travel">旅行度假</button>
+    <button data-ptab="daily">日常生活</button>
+    <button data-ptab="event">活动场景</button>
+    <button data-ptab="custom">自定义</button>
+  </div>
+  <div class="picker-body" id="picker-body"></div>
+  <div class="picker-foot" id="picker-foot"></div>
+</aside>
+
+<div class="lightbox" id="lightbox" hidden>
+  <img id="lightbox-img" alt="" />
+  <button class="btn ghost small lightbox-close" id="lightbox-close">关闭</button>
+</div>
+
+<!-- 购买渠道：只列真实商家页面，不做统一下单 -->
+<div class="modal" id="channels" hidden>
+  <div class="modal-card">
+    <h3>购买渠道</h3>
+    <p class="muted">下面是清单里每件商品的真实商家页面。CrossCart 不做代下单，也不保存支付信息；颜色、尺码、运费与关税以商家结账页为准。</p>
+    <ul class="channel-list" id="channel-list"></ul>
+    <div class="modal-actions">
+      <button class="btn ghost" id="channels-close">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>

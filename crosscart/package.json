@@ -1,0 +1,50 @@
+{
+  "name": "crosscart",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -p packages/core",
+    "test": "npm run build && node --test packages/core/test/core.test.ts packages/core/test/prefs.test.ts packages/core/test/propose.test.ts packages/core/test/pref-ranking.test.ts packages/core/test/f4-plan-guard.test.ts packages/core/test/scenarios.test.ts packages/core/test/purchase.test.ts packages/core/test/scenes.test.ts packages/core/test/regions.test.ts packages/core/test/cost.test.ts packages/bridge/test/scenegen.test.mjs",
+    "gen:assets": "node scripts/gen-assets.mjs",
+    "serve": "node scripts/serve.mjs",
+    "studio": "node packages/bridge/src/server.mjs",
+    "verify": "node scripts/verify-workbench.mjs",
+    "verify:stage3": "node scripts/verify-stage3.mjs",
+    "verify:real": "node scripts/verify-stage3-real.mjs",
+    "check:prefs": "node scripts/check-prefs-ui.mjs",
+    "check:context": "node scripts/check-prefs-context.mjs",
+    "verify:all": "node scripts/verify-workbench.mjs && node scripts/verify-stage3.mjs",
+    "shots": "node scripts/shoot-workbench.mjs",
+    "dev": "node packages/bridge/src/server.mjs",
+    "check:f2": "node scripts/check-pref-swap.mjs",
+    "check:f3": "node scripts/check-f3.mjs",
+    "check:f4": "node scripts/check-f4.mjs",
+    "check:f4:dialog": "node scripts/check-f4-dialog.mjs",
+    "demo": "node scripts/serve-demo.mjs",
+    "tunnel": "node scripts/tunnel.mjs",
+    "report:f2": "node scripts/report-pref-ranking.mjs",
+    "check:public": "node scripts/check-public.mjs",
+    "check:home": "node scripts/check-home-ux.mjs",
+    "check:p6:owned": "node scripts/check-p6-owned.mjs",
+    "check:p6:dialog": "node scripts/check-p6-dialog.mjs",
+    "check:p6:ui": "node scripts/check-p6-ui.mjs",
+    "shot:p6": "node scripts/shot-phase6.mjs",
+    "check:p9": "node scripts/check-p9.mjs",
+    "check:p9:dialog": "node scripts/check-p9-dialog.mjs",
+    "check:p10": "node scripts/check-p10.mjs",
+    "serve:public": "node scripts/serve-public.mjs",
+    "opt:hero": "node scripts/optimize-hero.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.1",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "sharp": "^0.35.5",
+    "undici": "^8.12.4"
+  }
+}

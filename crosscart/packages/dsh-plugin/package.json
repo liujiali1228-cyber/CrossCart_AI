@@ -1,0 +1,11 @@
+{
+  "name": "@crosscart/dsh-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CrossCart AI dsh plugin: outfit plan tools backed by @crosscart/core",
+  "dependencies": {
+    "@deepseek-ai/cordis": "~4.1.0",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.1"
+  }
+}

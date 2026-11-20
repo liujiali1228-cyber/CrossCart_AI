@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CrossCart AI · 拼搭原型</title>
+<link rel="stylesheet" href="/demo/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">CrossCart<span>AI</span></div>
+  <div class="confirm-card">
+    <span class="chip chip-ok">已确认任务</span>
+    <span class="meta">东京 11/24–11/26 · 3 天</span>
+    <span class="meta">预算 <b>$200</b>（只算新买）</span>
+    <span class="meta">11/22 前到 · 上海</span>
+    <span class="meta">已有：深色直筒牛仔裤</span>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="outfit-card" aria-label="搭配方案">
+    <div class="outfit-head">
+      <h1 id="plan-label">东京 3 天 · 方案 A</h1>
+      <span class="rev" id="revision">rev 0</span>
+    </div>
+
+    <div class="canvas-wrap" id="canvas-wrap">
+      <div class="canvas-bg"></div>
+      <!-- 单品槽位（JS 渲染） -->
+      <div id="slots"></div>
+    </div>
+
+    <!-- 选中单品后的操作面板：放在画布下方，不遮挡搭配图 -->
+    <div id="popover" class="action-panel" hidden></div>
+
+    <div class="canvas-foot">
+      <div class="cost-row">
+        <span>待买 <b id="buy-count">0</b> 件 · 新增支出 <b id="total">$0</b></span>
+        <span class="status-chip" id="total-status"></span>
+      </div>
+      <div class="arrival-row" id="arrival-row"></div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <section class="card">
+      <h2>预算</h2>
+      <div class="budget-bar"><div class="budget-fill" id="budget-fill"></div></div>
+      <div class="budget-text" id="budget-text"></div>
+      <div class="hint" id="budget-hint"></div>
+    </section>
+
+    <section class="card">
+      <h2>到货判断</h2>
+      <div id="arrival-detail"></div>
+    </section>
+
+    <section class="card">
+      <h2>待买清单</h2>
+      <ul id="lines"></ul>
+    </section>
+
+    <section class="card">
+      <h2>偏好（已应用）</h2>
+      <ul class="prefs">
+        <li><span class="scope scope-profile">长期</span>喜欢浅色 <span class="dim">· 已确认</span></li>
+        <li><span class="scope scope-profile">长期</span>鞋码 41 / 上衣 M <span class="dim">· 已确认</span></li>
+        <li><span class="dim">本次任务没有临时覆盖；说「这次要穿黑色」会生成 task 作用域并优先。</span></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>变更记录 <span class="dim" id="op-count"></span></h2>
+      <ul id="ops"></ul>
+    </section>
+  </aside>
+</main>
+
+<div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="单品详情"></aside>
+
+<div class="toast" id="toast" hidden></div>
+
+<p class="footnote">原型说明：商品为种子目录演示数据；运费/到货为规则估算，界面会明确标注「估算 / 待确认」。换件、预算与到货重算由 @crosscart/core 纯函数完成，模型不参与。</p>
+
+<script type="module" src="/demo/app.js"></script>
+</body>
+</html>

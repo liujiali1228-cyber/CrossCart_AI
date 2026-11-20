@@ -1,0 +1,6 @@
+# CrossCart 插件挂载层：以 Web overlay 方式把本地插件插进 dsh 插件树。
+# 用法（在 crosscart/ 目录下）：
+#   dsh web --patch packages/dsh-plugin/cordis.yml
+- insert:
+    - id: crosscart
+      name: 'D:/aiproject/crosscart/packages/dsh-plugin/src/index.ts'

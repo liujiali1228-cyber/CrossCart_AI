@@ -1,0 +1,20 @@
+{
+  "_说明": "复制本文件为 scenegen.config.json 并填 apiKey。环境变量 SCENEGEN_* 同名项优先于此文件。",
+  "provider": {
+    "baseUrl": "https://api.openai.com/v1",
+    "apiKey": "sk-...",
+    "model": "gpt-image-2.6-sunburst",
+    "size": "1024x1536",
+    "quality": "medium",
+    "refsMode": "openai",
+    "timeoutMs": 240000
+  },
+  "_字段": {
+    "baseUrl": "OpenAI 官方或任何 OpenAI 兼容网关（结尾不要 /）",
+    "model": "gpt-image-2.6-sunburst（编辑精度优先）或 gpt-image-2.6-flare（更快更便宜）",
+    "size": "1024x1536 = 2:3 竖图（人物全身），也可用 1024x1024 / 1536x1024",
+    "quality": "low/medium/high。medium 单张约 $0.04–0.05，high 约 4 倍；建议验证用 medium",
+    "refsMode": "openai=上传参考图走 /images/edits（保人物一致）；none=纯提示词（最便宜，一致性差）",
+    "timeoutMs": "gpt-image 单张常要 30–120 秒，别设太短"
+  }
+}

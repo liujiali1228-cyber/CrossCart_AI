@@ -1,0 +1,46 @@
+# 公网演示专用装配层（F4.5）
+#
+# 与 cordis.yml 的唯一区别：按 id 覆盖内置工具行，把它们关掉。
+# 原因：dsh 的 sdk profile 默认带「在本机执行命令 / 读写任意文件 / 开子代理」的工具，
+# 只适合开发者本机使用；一旦通过隧道暴露给外部访问者，等于把 shell 交出去。
+#
+# 用法（bridge 的 chat.mjs 通过 CROSSCART_DSH_PATCH 指定）：
+#   dsh --profile sdk --patch packages/dsh-plugin/cordis.demo.yml
+- insert:
+    - id: crosscart
+      name: 'D:/aiproject/crosscart/packages/dsh-plugin/src/index.ts'
+
+# 关掉本地执行与文件系统类工具：演示只需要商品/方案/偏好这几件事
+- insert:
+    - id: tool-bash
+      disabled: true
+    - id: tool-pwsh
+      disabled: true
+    - id: tool-jobs
+      disabled: true
+    - id: tool-fs
+      disabled: true
+    - id: tool-fs-search
+      disabled: true
+    - id: tool-skill
+      disabled: true
+    - id: skill
+      disabled: true
+    - id: skill-filesystem
+      disabled: true
+    - id: tool-subagent
+      disabled: true
+    - id: tool-subagent-control
+      disabled: true
+    - id: tool-subagent-fork
+      disabled: true
+    - id: tool-workflow
+      disabled: true
+    - id: tool-web
+      disabled: true
+    - id: tool-working-directory
+      disabled: true
+    - id: tool-todo
+      disabled: true
+    - id: tool-goal
+      disabled: true

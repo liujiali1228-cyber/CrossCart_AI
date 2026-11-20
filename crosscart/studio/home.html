@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CrossCart AI · 场景穿搭购物</title>
+<link rel="stylesheet" href="/design.css" />
+<link rel="stylesheet" href="/home.css" />
+</head>
+<body class="home">
+
+<!-- 主视觉与编辑精选为第三方时尚摄影参考素材（仅内部视觉验证，未获授权）。
+     来源、尺寸与授权状态见 studio/assets/SOURCES.md；页面底部的原型说明区保留同样信息。 -->
+
+<header class="topbar">
+  <a class="wordmark" href="/">CrossCart<span class="ai">AI</span></a>
+  <nav class="topnav" aria-label="主导航">
+    <a href="#discover" class="active">本期精选</a>
+    <a href="#plans">我的方案</a>
+    <a href="#prefs">个人偏好</a>
+  </nav>
+  <div class="topbar-right"></div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Autumn 2026 · 场景穿搭</p>
+      <h1>让每一次出行，<br />都有自己的风格</h1>
+      <p class="hero-sub">从目的地到穿搭灵感，发现适合你的风格与单品。</p>
+
+      <form class="ask" id="ask" autocomplete="off">
+        <label class="ask-label" for="ask-input">你想去哪儿，想穿成什么样</label>
+        <div class="ask-row">
+          <input id="ask-input" aria-label="描述你的购物需求"
+            placeholder="东京三天，预算 200 美元，秋日街头" />
+          <button class="ask-go" id="ask-go" type="submit" aria-label="开始搭一套">→</button>
+        </div>
+      </form>
+
+      <div class="hero-chips" id="hero-chips"></div>
+      <p class="hero-status" id="hero-status" hidden></p>
+    </div>
+
+    <figure class="hero-media" id="hero-media"></figure>
+  </section>
+
+  <section class="section" id="discover">
+    <div class="section-head">
+      <h2>本期编辑精选</h2>
+      <span class="label-xs">四种场景 · 点选填入你的需求</span>
+    </div>
+    <div class="insp-grid" id="insp-grid"></div>
+  </section>
+
+  <section class="section" id="plans">
+    <div class="section-head">
+      <h2>我的方案</h2>
+      <span class="label-xs" id="plans-count"></span>
+    </div>
+    <div class="plan-grid" id="plan-grid"></div>
+    <!-- 没有封面的方案不占用卡片网格，收成一行行文字；这不代表"后台任务"，只是"还没配图" -->
+    <div class="pending" id="plan-pending" hidden>
+      <p class="pending-head">更多方案</p>
+      <ul class="pending-list" id="pending-list"></ul>
+    </div>
+    <div class="plans-foot">
+      <button class="link-xs" type="button" id="toggle-copies" hidden></button>
+    </div>
+  </section>
+
+  <section class="section" id="prefs">
+    <div class="section-head">
+      <h2>我的偏好</h2>
+      <span class="label-xs" id="prefs-count"></span>
+    </div>
+
+    <!-- 待确认：AI 推断但尚未生效（F3）。只在真的有待确认时出现，一句话说清要做什么。 -->
+    <div class="pref-pending" id="prefs-pending" hidden>
+      <div class="pref-pending-head">
+        <span class="pref-pending-title">待确认 <span class="pref-badge-ai">AI 推断</span></span>
+        <span class="pref-pending-note">确认后才会用于推荐</span>
+      </div>
+      <ul class="pref-props" id="prefs-pending-list"></ul>
+    </div>
+
+    <div class="prefs" id="prefs-list"></div>
+
+    <form class="pref-form" id="pref-form">
+      <select id="pref-attr" aria-label="偏好类型">
+        <option value="style">风格</option>
+        <option value="palette">颜色</option>
+        <option value="fit">版型</option>
+        <option value="budget">预算习惯</option>
+        <option value="avoid">不想要的</option>
+      </select>
+      <input id="pref-value" placeholder="例如：极简、中性色，不要大面积印花" aria-label="偏好内容" />
+      <button class="btn small" type="submit">保存偏好</button>
+    </form>
+  </section>
+</main>
+
+<footer class="proto" id="proto">
+  <p>
+    首页主视觉与编辑精选为第三方时尚摄影参考素材，仅用于原型验证，未获授权，不得二次分发；
+    正式发布前须替换为自有或已授权素材。来源见 <code>studio/assets/SOURCES.md</code>。
+  </p>
+</footer>
+
+<div class="toast" id="toast" hidden></div>
+<script type="module" src="/home.js"></script>
+</body>
+</html>

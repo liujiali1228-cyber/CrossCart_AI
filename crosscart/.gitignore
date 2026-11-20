@@ -1,0 +1,28 @@
+node_modules/
+dist/
+*.log
+scenegen.config.json
+data-demo/
+
+# 运行状态与缓存：这些是「这台机器跑到哪儿了」，不是项目资产，不该进仓库。
+# 注意 data/seed/ 必须保留（种子目录 + 商品图），所以只忽略具体的运行文件与目录。
+data/state.json
+data/state.json.bak
+data/state.json.tmp
+data/chat.json
+data/scenegen.usage.json
+data/live/
+data/scenes/
+data-public/
+.tmp/
+
+# Generated acceptance artifacts and local verification records.
+/shots/
+/shot-final.png
+/docs/F2-候选差异报告.json
+/docs/F3-闭环记录.json
+/docs/F4-对话验收.json
+/docs/F4-验收证据.json
+/docs/F4.5-公网验收.json
+/docs/P6-owned-对话记录.json
+/docs/P9-真实生图记录.json

@@ -1,0 +1,74 @@
+# Render 部署描述（Infrastructure as Code）
+#
+# 用法：
+#   1. 把仓库推到 GitHub/GitLab；
+#   2. Render → New → Blueprint → 选这个仓库（它会读本文件）；
+#   3. 在 Environment 里填下面 sync:false 的值（密钥由你本人填，我不经手）；
+#   4. 部署完成后拿到 https://<service>.onrender.com（平台子域，HTTPS、无需口令）；
+#      需要自定义域名在 Settings → Custom Domain 绑。
+#
+# 免费档的两个硬限制（必须知道，不要当成正式生产）：
+#   - 15 分钟无请求会休眠，下一次访问冷启动约 30–60 秒；
+#   - 没有持久磁盘：容器重启后 data-public 里的方案会回到初始状态。
+# 要「重启不丢方案 + 不休眠」，用下面的 starter + 两块磁盘（磁盘只有付费档提供）。
+#
+# 两个磁盘分别装：业务数据（方案/偏好/场景图/额度/商品缓存）与 dsh 会话/profile。
+
+services:
+  - type: web
+    name: crosscart
+    runtime: docker
+    dockerfilePath: ./deploy/Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: CROSSCART_HOST
+        value: 0.0.0.0
+      - key: CROSSCART_PORT
+        value: "3000"
+      - key: CROSSCART_DATA_DIR
+        value: /app/data-public
+      - key: DSH_HOME
+        value: /app/dsh-home
+      - key: CROSSCART_DEMO_MODE
+        value: "1"
+      # 公开模式：管理/调试接口默认关闭，健康检查只回最小信息
+      - key: CROSSCART_PUBLIC
+        value: "1"
+      # Render 前面有自己的代理，可信；不开这个的话所有访客会被算成同一个 IP
+      - key: CROSSCART_TRUST_PROXY
+        value: "1"
+      - key: CROSSCART_RATE_CHAT_PER_HOUR
+        value: "40"
+      - key: CROSSCART_RATE_IMAGE_PER_HOUR
+        value: "6"
+      - key: CROSSCART_RATE_CHAT_PER_IP_PER_HOUR
+        value: "12"
+      - key: CROSSCART_RATE_IMAGE_PER_IP_PER_HOUR
+        value: "3"
+      - key: CROSSCART_RATE_API_PER_IP_PER_MIN
+        value: "90"
+      - key: CROSSCART_RATE_WRITE_PER_IP_PER_MIN
+        value: "30"
+      # 可选：给内部验收脚本用（/api/scenes/budget 等）。不填则公开模式下这些接口不存在。
+      - key: CROSSCART_ADMIN_TOKEN
+        sync: false
+      # 模型凭据：dsh 平时读 $DSH_HOME/.credentials.yaml，
+      # 镜像首次启动时由 scripts/provision-dsh-credentials.mjs 用这个变量写一次。
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      # 图像服务（OpenAI 兼容）。云端不要填 SCENEGEN_PROXY —— 那是本机开发代理。
+      - key: SCENEGEN_BASE_URL
+        sync: false
+      - key: SCENEGEN_API_KEY
+        sync: false
+      - key: SCENEGEN_MODEL
+        sync: false
+      - key: SCENEGEN_REFS
+        value: openai
+    disk:
+      name: crosscart-data
+      mountPath: /app/data-public
+      sizeGB: 1
