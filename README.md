@@ -8,13 +8,13 @@ CrossCart AI 是一个面向跨境出行的 AI 产品原型。用户说出目的
 
 ## 产品截图
 
-![CrossCart AI 桌面方案，左侧对话，中间穿搭商品，右侧购物清单与预算](docs/showcase/desktop-plan.png)
+![CrossCart AI 正式站桌面截图，东京冬夜穿搭场景、真实商品清单和预算](docs/showcase/desktop-live.png)
 
-桌面工作台将对话、穿搭和购物清单联动。右栏显示可计算费用和预算差额。
+桌面方案页展示已有场景图、商家购买入口、预计支出和预算差额。截图聚焦搭配和清单。
 
-<img src="docs/showcase/mobile-swap.png" alt="CrossCart AI 手机换件面板，显示外套候选、预计到手价格和到货时间" width="320">
+<img src="docs/showcase/mobile-live.png" alt="CrossCart AI 正式站移动端，同一份东京冬季方案和底部的对话、搭配、清单标签" width="320">
 
-手机上可按品类查看候选，并在确认后更换。截图取自隔离的示例环境，商品插图和价格用于展示交互。
+手机上可以通过底部标签浏览对话、搭配和清单，也能直接进入换件流程。两张截图均取自线上已有的「东京 3 天 · 冬季方案 A」。场景图为 AI 模拟，商品价格和库存以商家页面为准。
 
 ## 产品功能
 
